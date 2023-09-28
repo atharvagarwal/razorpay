@@ -35,3 +35,32 @@ export const paymentVerification = (req, res) => {
     res.status(200).json({ success: false });
   }
 };
+
+// Route to initiate a refund
+export const processRefund = async (req, res) => {
+  try {
+    const eventData = req.body;
+    if (
+      eventData.event === "refund.processed" ||
+      eventData.event === "refund.failed" ||
+      eventData.event === "refund.created"
+    ) {
+      const status = eventData.payload.refund.entity.status;
+      const amount = Number(eventData.payload.refund.entity.amount) / 100;
+      // You can store refund details in your database here
+      // Send a success response to Razorpay to acknowledge receipt of the webhook event
+      console.log(
+        "refund processing success of amount rs ",
+        amount + " with status " + status
+      );
+      res.send("Webhook received and processed successfully");
+    } else {
+      console.log("refund processing failure");
+      res.status(200).send("Webhook received but not processed (not a refund event)");
+    }
+  } catch (error) {
+    console.error("Error processing webhook:", error);
+    res.status(400).send("Error processing webhook");
+  }
+};
+  
