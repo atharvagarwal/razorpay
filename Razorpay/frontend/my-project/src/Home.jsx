@@ -6,10 +6,15 @@ const Home = () => {
   const checkoutHandler = async (amount) => {
     const {
       data: { key },
-    } = await axios.get("https://5683-2405-201-301a-e803-718b-2695-847c-2967.ngrok-free.app/api/getkey");
+    } = await axios.get(
+      "https://5683-2405-201-301a-e803-718b-2695-847c-2967.ngrok-free.app/api/getkey"
+    );
     const {
       data: { order },
-    } = await axios.post("https://5683-2405-201-301a-e803-718b-2695-847c-2967.ngrok-free.app/api/checkout", { amount });
+    } = await axios.post(
+      "https://5683-2405-201-301a-e803-718b-2695-847c-2967.ngrok-free.app/api/checkout",
+      { amount }
+    );
     const options = {
       key: key, // Enter the Key ID generated from the Dashboard
       amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -31,20 +36,18 @@ const Home = () => {
       },
       handler: function (response) {
         console.log(response.razorpay_payment_id);
-        if(response.razorpay_payment_id) {
-            window.location.href = `/paymentSuccess?reference=${response.razorpay_payment_id}`;
+        if (response.razorpay_payment_id) {
+          window.location.href = `/paymentSuccess?reference=${response.razorpay_payment_id}`;
+        } else {
+          alert("payment is not successful");
         }
-        else{
-            alert('payment is not successful')
-        }
-    
+
         // You can redirect to a success page or perform other actions here
         // Example: window.location.href = '/success-page';
       },
     };
     var rzp1 = new window.Razorpay(options);
     rzp1.open();
-    
   };
   return (
     <Box>

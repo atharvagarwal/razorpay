@@ -1,5 +1,8 @@
 import { instance } from "../server.js";
 import crypto from "crypto";
+import stripe from 'stripe';
+
+const stripeInstance = stripe('sk_test_51KoYjUSDZBjXIg74HFVs8kS7SMB0v1K8pbA6TCU7meJtTx9NQslculaw8oyBx1xR6r6CBRxQQC0qKJ91xR9eCTXk00B0MFg0qZ');
 export const checkout = async (req, res) => {
   try {
     var options = {
@@ -63,4 +66,25 @@ export const processRefund = async (req, res) => {
     res.status(400).send("Error processing webhook");
   }
 };
+
+
+//STRIPE PAYMENTS 
+
+export const stripeCheckout=async(req,res)=>{
+  const { amount } = req.body;
+
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripeInstance.paymentIntents.create({
+    amount: 2000*100, //replace to amount
+    currency: "inr",
+    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+}
   
