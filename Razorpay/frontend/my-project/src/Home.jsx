@@ -7,12 +7,12 @@ const Home = () => {
     const {
       data: { key },
     } = await axios.get(
-      "https://5683-2405-201-301a-e803-718b-2695-847c-2967.ngrok-free.app/api/getkey"
+      "http://localhost:4000/api/getkey"
     );
     const {
       data: { order },
     } = await axios.post(
-      "https://5683-2405-201-301a-e803-718b-2695-847c-2967.ngrok-free.app/api/checkout",
+      "http://localhost:4000/api/checkout",
       { amount }
     );
     const options = {
